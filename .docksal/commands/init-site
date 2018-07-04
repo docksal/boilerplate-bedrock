@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+#: exec_target = cli
+
+## Initialize/reinstall site
+##
+## Usage: fin init-site
+
+# Abort if anything fails
+set -e
+
+#-------------------------- Settings --------------------------------
+
+# PROJECT_ROOT and DOCROOT are set as env variables in cli
+SITE_DIRECTORY="default"
+DOCROOT_PATH="${PROJECT_ROOT}/${DOCROOT}"
+SITEDIR_PATH="${DOCROOT_PATH}/sites/${SITE_DIRECTORY}"
+
+#-------------------------- END: Settings --------------------------------
+
+#-------------------------- Helper functions --------------------------------
+
+# Copy a settings file.
+# Skips if the destination file already exists.
+# @param $1 source file
+# @param $2 destination file
+copy_settings_file()
+{
+	local source="$1"
+	local dest="$2"
+
+	if [[ ! -f $dest ]]; then
+		echo "Copying ${dest}..."
+		cp $source $dest
+	else
+		echo "${dest} already in place."
+		cp -f $source $dest
+	fi
+}
+
+#-------------------------- END: Helper functions --------------------------------
+
+#-------------------------- Functions --------------------------------
+
+# Copy env.default into PROJECT_ROOT/.env
+copy_settings ()
+{
+	echo "WP_HOME=http://${VIRTUAL_HOST}" > ${PROJECT_ROOT}/.env
+	cat ${PROJECT_ROOT}/.docksal/settings/env.default >> ${PROJECT_ROOT}/.env
+}
+
+# Install site
+site_install ()
+{
+	cd $DOCROOT_PATH
+
+	wp package install aaemnnosttv/wp-cli-dotenv-command
+
+	wp dotenv salts regenerate
+
+	wp core install \
+		--url=${VIRTUAL_HOST} \
+		--title='My WordPress Site' \
+		--admin_user=${WP_ADMIN_USER} \
+		--admin_password=${WP_ADMIN_PASS} \
+		--admin_email=${WP_ADMIN_EMAIL}
+}
+
+composer_install ()
+{
+	cd $PROJECT_ROOT
+	composer install
+}
+#-------------------------- END: Functions --------------------------------
+
+#-------------------------- Execution --------------------------------
+
+# Project initialization steps
+copy_settings
+composer_install
+time site_install
+
+
+#-------------------------- END: Execution --------------------------------
