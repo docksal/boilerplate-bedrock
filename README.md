@@ -1,3 +1,34 @@
+# Docksal Powered Bedrock (Wordpress Composer Version)
+
+Features:
+
+- WordPress w/ Composer
+
+## Setup instructions
+
+1. Clone this repo into your Projects directory
+
+```
+git clone https://github.com/docksal/bedrock.git
+cd bedrock
+```
+
+1. Initialize the site
+
+This will run composer install, initialize local settings, and install the site via wp-cli
+
+```
+fin init
+```
+
+1. Point your browser to
+
+```
+http://bedrock.docksal
+```
+
+-------------
+
 # [Bedrock](https://roots.io/bedrock/)
 [![Packagist](https://img.shields.io/packagist/v/roots/bedrock.svg?style=flat-square)](https://packagist.org/packages/roots/bedrock)
 [![Build Status](https://img.shields.io/travis/roots/bedrock.svg?style=flat-square)](https://travis-ci.org/roots/bedrock)
