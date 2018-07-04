@@ -51,13 +51,12 @@ copy_settings ()
 # Install site
 site_install ()
 {
-	cd $DOCROOT_PATH
-
+	cd ${PROJECT_ROOT}
 	wp package install aaemnnosttv/wp-cli-dotenv-command
 
 	wp dotenv salts regenerate
 
-	wp core install \
+	php -d sendmail_path=/bin/true /usr/local/bin/wp core install \
 		--url=${VIRTUAL_HOST} \
 		--title='My WordPress Site' \
 		--admin_user=${WP_ADMIN_USER} \
